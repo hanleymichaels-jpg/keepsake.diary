@@ -5,6 +5,8 @@ photo, done. See [SPEC.md](SPEC.md) for the why and the decisions.
 
 ## Status
 
+Live at https://keepsakediary.net, deployed by Netlify from `main`.
+
 **Stage 2 · Memory.** Everything from stage 1 (voice, typing, photos,
 clips, undo) plus a cloud backup: sign in once with an email code, entries
 and media sync to Supabase while the app is open, recordings are
