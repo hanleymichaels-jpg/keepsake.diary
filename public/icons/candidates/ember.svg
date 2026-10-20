@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#2E1F3F"/>
+  <!-- page block, peeking out to the right and below the cover -->
+  <rect x="232" y="150" width="650" height="760" rx="46" fill="#D9C6AE"/>
+  <rect x="246" y="164" width="650" height="760" rx="46" fill="#F3E7D3"/>
+  <!-- cover -->
+  <rect x="150" y="110" width="690" height="800" rx="52" fill="#6B3F86"/>
+  <!-- spine -->
+  <path d="M150 162a52 52 0 0 1 52-52h50v800h-50a52 52 0 0 1-52-52z" fill="#55306E"/>
+  <circle cx="201" cy="300" r="10" fill="#3F2452"/>
+  <circle cx="201" cy="510" r="10" fill="#3F2452"/>
+  <circle cx="201" cy="720" r="10" fill="#3F2452"/>
+  <!-- ribbon -->
+  <path d="M672 110h70v860l-35-40-35 40z" fill="#E8785F"/>
+  <!-- listening mark -->
+  <g fill="#F3E7D3">
+    <rect x="384" y="470" width="40" height="110" rx="20"/>
+    <rect x="452" y="420" width="40" height="210" rx="20"/>
+    <rect x="520" y="370" width="40" height="310" rx="20"/>
+    <rect x="588" y="430" width="40" height="190" rx="20"/>
+  </g>
+</svg>

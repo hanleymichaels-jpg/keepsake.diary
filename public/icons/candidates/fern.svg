@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#1F3D32"/>
+  <!-- pages -->
+  <rect x="236" y="156" width="640" height="756" rx="44" fill="#E9DCC3"/>
+  <!-- cover -->
+  <rect x="150" y="110" width="690" height="800" rx="52" fill="#2F5D4B"/>
+  <!-- spine -->
+  <path d="M150 162a52 52 0 0 1 52-52h56v800h-56a52 52 0 0 1-52-52z" fill="#214537"/>
+  <!-- clasp -->
+  <rect x="690" y="440" width="190" height="150" rx="30" fill="#E3B14F"/>
+  <circle cx="800" cy="515" r="26" fill="#2F5D4B"/>
+  <!-- ribbon -->
+  <path d="M560 110h64v870l-32-40-32 40z" fill="#E3B14F"/>
+  <!-- listening mark: two arcs -->
+  <g fill="none" stroke="#E9DCC3" stroke-width="40" stroke-linecap="round">
+    <path d="M380 420a130 130 0 0 1 0 184"/>
+    <path d="M300 340a240 240 0 0 1 0 344"/>
+  </g>
+  <circle cx="330" cy="512" r="30" fill="#E9DCC3"/>
+</svg>

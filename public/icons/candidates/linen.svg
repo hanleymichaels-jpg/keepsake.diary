@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#C9553D"/>
+  <!-- cover: cream diary, bold and front-facing -->
+  <rect x="150" y="120" width="724" height="784" rx="72" fill="#F6EEE2"/>
+  <!-- spine band -->
+  <path d="M150 192a72 72 0 0 1 72-72h60v784h-60a72 72 0 0 1-72-72z" fill="#3B2240"/>
+  <!-- page edge shadow at bottom -->
+  <rect x="282" y="860" width="592" height="44" rx="22" fill="#E2D5C2"/>
+  <!-- ribbon -->
+  <path d="M700 120h68v846l-34-38-34 38z" fill="#3B2240"/>
+  <!-- spark mark -->
+  <path d="M500 330c18 110 60 152 170 170-110 18-152 60-170 170-18-110-60-152-170-170 110-18 152-60 170-170z" fill="#C9553D"/>
+</svg>
