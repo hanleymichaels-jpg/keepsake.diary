@@ -3,7 +3,7 @@ import { json, serviceClient, requireUser, loadEntry, namesFor, transcribe, extr
 export const config = { path: '/api/transcribe' }
 
 /** Body: { id }. Downloads the recording, writes the transcript and the derived chips back onto the entry. */
-export default async (req: Request) => {
+async function handle(req: Request) {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405)
   const sb = serviceClient()
   const user = await requireUser(req, sb)
@@ -32,4 +32,13 @@ export default async (req: Request) => {
   }).eq('id', id).eq('user_id', user.id)
   if (upErr) return json({ error: upErr.message }, 500)
   return json({ ok: true, transcript })
+}
+
+export default async (req: Request) => {
+  try {
+    return await handle(req)
+  } catch (e) {
+    console.error(e)
+    return json({ error: e instanceof Error ? e.message.slice(0, 200) : 'Something went wrong' }, 500)
+  }
 }

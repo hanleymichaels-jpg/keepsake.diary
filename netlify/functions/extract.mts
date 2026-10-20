@@ -3,7 +3,7 @@ import { json, serviceClient, requireUser, loadEntry, namesFor, extract } from '
 export const config = { path: '/api/extract' }
 
 /** Body: { id }. Re-derives people, places, keywords and title after she edits the text. */
-export default async (req: Request) => {
+async function handle(req: Request) {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405)
   const sb = serviceClient()
   const user = await requireUser(req, sb)
@@ -23,4 +23,13 @@ export default async (req: Request) => {
   }).eq('id', id).eq('user_id', user.id)
   if (error) return json({ error: error.message }, 500)
   return json({ ok: true, ...chips })
+}
+
+export default async (req: Request) => {
+  try {
+    return await handle(req)
+  } catch (e) {
+    console.error(e)
+    return json({ error: e instanceof Error ? e.message.slice(0, 200) : 'Something went wrong' }, 500)
+  }
 }
