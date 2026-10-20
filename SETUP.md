@@ -83,9 +83,10 @@ The site is `keepsake-diary-1v90` on the Hanley Development Co. team
 repository `hanleymichaels-jpg/keepsake.diary`, so every push to `main`
 deploys. Build command `pnpm build`,
 publish directory `dist` (already in `netlify.toml`). Functions deploy from
-`netlify/functions` automatically. The custom domain `keepsakediary.net` is set as primary under **Domain
-management** once you own it, and install the app on her phone from that
-address, not from the `netlify.app` one.
+`netlify/functions` automatically. The custom domain `keepsakediary.net`
+(bought through Netlify on 20 October 2026) is the primary domain under
+**Domain management**, with HTTPS from Let's Encrypt. Install the app on her
+phone from that address, not from the `netlify.app` one.
 
 Function timeout: Netlify runs synchronous functions for 10 seconds on the
 free plan and up to 26 on paid plans. A one-minute recording transcribes in a
