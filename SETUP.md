@@ -46,7 +46,9 @@ Locally: copy `.env.example` to `.env` and fill it in. `.env` is git-ignored.
 
 On Netlify: **Site configuration → Environment variables**, add the same six
 names with the same values. The `VITE_` pair reaches the browser; the others
-stay in the functions.
+stay in the functions. Leave the "secret" switch off: on the free plan,
+variables added with it set were silently dropped and the functions failed
+with "Missing environment variable".
 
 | Name | Where it goes |
 |---|---|
@@ -75,9 +77,13 @@ Without a `.env` the app runs phone-only, exactly as stage 1 did.
 
 ## 5. Netlify
 
-Connect the repository, build command `pnpm build`, publish directory `dist`
-(already in `netlify.toml`). Functions deploy from `netlify/functions`
-automatically. Add the custom domain `keepsake.diary` under **Domain
+The site is `keepsake-diary-1v90` on the Hanley Development Co. team
+(https://app.netlify.com/projects/keepsake-diary-1v90), created on
+20 October 2026 with all six variables set. Until a GitHub remote exists it
+is deployed by direct upload from this folder; once the repository is on
+GitHub, connect it so pushes to `main` deploy. Build command `pnpm build`,
+publish directory `dist` (already in `netlify.toml`). Functions deploy from
+`netlify/functions` automatically. Add the custom domain `keepsake.diary` under **Domain
 management** once you own it, and install the app on her phone from that
 address, not from the `netlify.app` one.
 
