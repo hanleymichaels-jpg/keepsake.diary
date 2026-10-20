@@ -5,23 +5,23 @@ photo, done. See [SPEC.md](SPEC.md) for the why and the decisions.
 
 ## Status
 
-**Stage 1 · Capture, on the phone only.** Real microphone recording (kept as
-audio, played back on the memory page), typing, photos (resized on the
-phone) and video clips up to three minutes (poster frame, filming date),
-all saved in the phone's own database. No backend yet: voice entries show
-*Waiting to be written down* until transcription arrives in stage 2, and
-she can type the words herself meanwhile. Delete and photo removal give a
-five-second Undo. Three icon candidates are at Settings → Icon candidates.
+**Stage 2 · Memory.** Everything from stage 1 (voice, typing, photos,
+clips, undo) plus a cloud backup: sign in once with an email code, entries
+and media sync to Supabase while the app is open, recordings are
+transcribed server-side with her names list as a vocabulary hint, and
+people, places and keywords are pulled out by Claude. Local-first: the
+phone is always the copy she sees; the server fills in transcripts and
+chips. Without a `.env` the app still runs phone-only.
 
-Tested in a desktop browser with a synthetic microphone and generated
-media; the iOS-specific risks in the spec (mic permission persisting,
-recording surviving a lock) are still to be proven on her phone.
+Setup is in [SETUP.md](SETUP.md). Verified in a desktop browser; the iOS
+risks in the spec are still to be proven on her phone.
 
 ## Commands
 
 ```bash
 pnpm dev       # local dev server (also reachable from a phone on the same wifi)
 pnpm build     # production build into dist/
+pnpm dev:api   # the two serverless functions on :8788 (needs .env)
 pnpm icons     # render public/icons/*.png from a candidate: pnpm icons fern
 ```
 
@@ -35,6 +35,13 @@ pnpm icons     # render public/icons/*.png from a candidate: pnpm icons fern
   captured, even when interrupted.
 - `src/media.ts` — photo resizing, video length check, poster frames,
   thumbnails.
-- `src/derive.ts` — local stand-in for the names/places extraction.
+- `src/derive.ts` — local stand-in for the names extraction, used until the
+  server's answer arrives.
+- `src/sync.ts` — local-first sync: push dirty entries and media, pull server
+  changes, ask the functions to transcribe or re-extract.
+- `src/supabase.ts` — client and session hook. Unconfigured = phone-only.
+- `netlify/functions/` — `transcribe` and `extract`, plain Request/Response
+  functions. `pnpm dev:api` serves them locally with Node.
+- `supabase/schema.sql` — tables, bucket and row-level security.
 - `public/icons/candidates/` — the three icon SVGs. `scripts/make-icons.mjs`
   renders the chosen one to every size.

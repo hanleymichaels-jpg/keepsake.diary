@@ -241,3 +241,8 @@ img { display: block; }
 .candidate--chosen { box-shadow: 0 0 0 3px var(--accent); }
 .candidate__name { font-weight: 700; font-size: 17px; }
 .candidate__pick { min-height: 44px; font-size: 17px; color: var(--accent); font-weight: 600; }
+
+/* sign in */
+.signin { justify-content: center; padding-bottom: 20vh; }
+.signin__icon { width: 96px; height: 96px; border-radius: 21.6px; margin: 0 auto 12px; }
+.signin__code { text-align: center; letter-spacing: .3em; font-size: 28px; font-variant-numeric: tabular-nums; }

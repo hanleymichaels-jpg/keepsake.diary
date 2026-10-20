@@ -1,0 +1,1 @@
+{"root":["./netlify/functions/extract.mts","./netlify/functions/transcribe.mts","./netlify/lib/shared.mts"],"version":"5.9.3"}

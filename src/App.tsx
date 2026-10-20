@@ -4,6 +4,9 @@ import { Editor } from './screens/Editor'
 import { Memory } from './screens/Memory'
 import { Settings } from './screens/Settings'
 import { Icons } from './screens/Icons'
+import { SignIn } from './screens/SignIn'
+import { isConfigured, useSession } from './supabase'
+import { startSync } from './sync'
 
 export type Route =
   | { name: 'home' }
@@ -27,6 +30,8 @@ export const go = (to: string) => {
 
 export function App() {
   const [route, setRoute] = useState<Route>(() => parse(location.hash))
+  const { session, loading } = useSession()
+
   useEffect(() => {
     const on = () => {
       setRoute(parse(location.hash))
@@ -35,6 +40,11 @@ export function App() {
     addEventListener('hashchange', on)
     return () => removeEventListener('hashchange', on)
   }, [])
+
+  useEffect(() => { if (session) startSync() }, [session])
+
+  if (isConfigured && loading) return <div className="screen" />
+  if (isConfigured && !session) return <SignIn />
 
   switch (route.name) {
     case 'new':

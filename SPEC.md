@@ -394,6 +394,7 @@ backend exists.
 | Photos and audio fill the device cache | App gets slow or iOS evicts data | Cache thumbnails, fetch full media on demand, measure |
 | A three-minute clip is 100MB+ and uploads only while the app is open | Backup lags for hours; she closes the app mid-upload | Resumable uploads in chunks, *Backing up…* line on Home, test on cellular |
 | HEVC clips do not play in non-Apple browsers | The export's HTML page is silent on a Windows PC | Note it in the export; convert to H.264 server-side if it matters later |
+| Long recordings exceed the function timeout | Transcript never arrives for a ten-minute recording | App retries after three minutes; move transcription to a background function if long recordings are common |
 | She finds the showback a step too many | Would break the two-tap promise | Watch her use it. Make *That's it* unnecessary by default. |
 
 ## 13. How we know it is working

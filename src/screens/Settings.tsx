@@ -1,19 +1,41 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../state'
+import { isConfigured, supabase } from '../supabase'
+import { useSyncStatus, pushSettings, pullSettings, syncNow } from '../sync'
 import { go } from '../App'
 
 const get = (k: string, d: string) => localStorage.getItem(k) ?? d
 
 export function Settings() {
   const { entries } = useStore()
+  const sync = useSyncStatus()
   const [nudge, setNudge] = useState(get('nudgeOn', '1') === '1')
   const [time, setTime] = useState(get('nudgeTime', '19:30'))
   const [names, setNames] = useState(get('names', ''))
   const [note, setNote] = useState('')
+  const loaded = useRef(false)
 
+  // Settings live on the phone and, when connected, in the cloud too.
+  useEffect(() => {
+    pullSettings().then((s) => {
+      if (s) { setNames(s.names); setNudge(s.nudgeOn); setTime(s.nudgeTime) }
+      loaded.current = true
+    })
+  }, [])
   useEffect(() => { localStorage.setItem('nudgeOn', nudge ? '1' : '0') }, [nudge])
   useEffect(() => { localStorage.setItem('nudgeTime', time) }, [time])
   useEffect(() => { localStorage.setItem('names', names) }, [names])
+  useEffect(() => {
+    if (!loaded.current) return
+    const t = setTimeout(() => void pushSettings({ names, nudgeOn: nudge, nudgeTime: time }), 800)
+    return () => clearTimeout(t)
+  }, [names, nudge, time])
+
+  const backup = !isConfigured
+    ? `${entries.length} moments on this phone. Not connected to a backup yet.`
+    : sync.syncing ? 'Backing up…'
+    : sync.pending > 0 ? `${sync.pending} ${sync.pending === 1 ? 'moment' : 'moments'} waiting to back up`
+    : `Everything is backed up · ${entries.length} moments`
 
   return (
     <div className="screen screen--pad">
@@ -49,8 +71,10 @@ export function Settings() {
       <div className="row" style={{ marginTop: 18 }}>
         <div>
           <div className="row__label">Backup</div>
-          <div className="row__sub">{entries.length} moments on this phone. Cloud backup arrives in stage 2.</div>
+          <div className="row__sub">{backup}</div>
+          {sync.error && <div className="row__sub" style={{ color: 'var(--danger)' }}>Last problem: {sync.error}</div>}
         </div>
+        {isConfigured && <button className="btn" onClick={() => void syncNow()}>Now</button>}
       </div>
       <div className="row">
         <div className="row__label">Export everything</div>
@@ -72,6 +96,10 @@ export function Settings() {
         <div className="row__label">Icon candidates</div>
         <button className="btn" onClick={() => go('icons')}>Look</button>
       </div>
+
+      {isConfigured && (
+        <button className="btn btn--quiet btn--block" style={{ marginTop: 48 }} onClick={() => void supabase!.auth.signOut()}>Sign out</button>
+      )}
     </div>
   )
 }

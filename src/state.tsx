@@ -3,6 +3,7 @@ import type { Entry, Media } from './types'
 import { derive } from './derive'
 import * as db from './db'
 import type { Ingested } from './media'
+import { registerSink, scheduleSync, fetchRemoteBlob } from './sync'
 
 export type { Entry, Media }
 
@@ -47,24 +48,30 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     db.loadEntries().then((list) => { dispatch({ type: 'loaded', entries: list }); setReady(true) })
+    registerSink({ put: (e) => dispatch({ type: 'put', entry: e }), drop: (id) => dispatch({ type: 'drop', id }) })
+    return () => registerSink(null)
   }, [dispatch])
 
   const find = useCallback((id: string) => latest.current.find((e) => e.id === id), [])
 
-  const add = useCallback(async (entry: Entry) => {
+  const save = useCallback(async (entry: Entry) => {
     dispatch({ type: 'put', entry })
     await db.putEntry(entry)
-    void db.persistStorage()
+    scheduleSync()
   }, [dispatch])
+
+  const add = useCallback(async (entry: Entry) => {
+    await save({ ...entry, dirty: true })
+    void db.persistStorage()
+  }, [save])
 
   const update = useCallback(async (id: string, patch: Partial<Entry>) => {
     const cur = find(id)
     if (!cur) return
-    let next: Entry = { ...cur, ...patch, updatedAt: Date.now() }
-    if (patch.text !== undefined) next = { ...next, ...derive(patch.text) }
-    dispatch({ type: 'put', entry: next })
-    await db.putEntry(next)
-  }, [find, dispatch])
+    let next: Entry = { ...cur, ...patch, updatedAt: Date.now(), dirty: true }
+    if (patch.text !== undefined && patch.text !== cur.text) next = { ...next, ...derive(patch.text), needsExtract: true }
+    await save(next)
+  }, [find, save])
 
   const addMedia = useCallback(async (id: string, items: Ingested[]) => {
     const cur = find(id)
@@ -74,29 +81,30 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       await db.putBlob(db.thumbId(it.meta.id), it.thumb)
       if (it.poster) await db.putBlob(db.posterId(it.meta.id), it.poster)
     }
-    const next = { ...cur, media: [...cur.media, ...items.map((i) => i.meta)], updatedAt: Date.now() }
-    dispatch({ type: 'put', entry: next })
-    await db.putEntry(next)
-  }, [find, dispatch])
+    await save({ ...cur, media: [...cur.media, ...items.map((i) => i.meta)], updatedAt: Date.now(), dirty: true })
+  }, [find, save])
 
   const removeMedia = useCallback(async (id: string, mediaId: string) => {
     const cur = find(id)
     if (!cur) return
-    const next = { ...cur, media: cur.media.filter((m) => m.id !== mediaId), updatedAt: Date.now() }
-    dispatch({ type: 'put', entry: next })
-    await db.putEntry(next)
+    await save({ ...cur, media: cur.media.filter((m) => m.id !== mediaId), updatedAt: Date.now(), dirty: true })
     // Delete the files only if the photo is still gone once the Undo window has passed.
     window.setTimeout(() => {
       const stillUsed = latest.current.some((e) => e.media.some((m) => m.id === mediaId))
       if (!stillUsed) void db.deleteBlobs([mediaId, db.thumbId(mediaId), db.posterId(mediaId)])
     }, UNDO_MS + 1000)
-  }, [find, dispatch])
+  }, [find, save])
 
   const remove = useCallback((id: string) => {
     const cur = find(id)
     if (!cur) return
     dispatch({ type: 'drop', id })
-    const timer = window.setTimeout(() => { pending.delete(id); void db.deleteEntry(cur) }, UNDO_MS)
+    const timer = window.setTimeout(async () => {
+      pending.delete(id)
+      await db.deleteEntry(cur)
+      await db.addTombstone(id, Date.now())
+      scheduleSync()
+    }, UNDO_MS)
     pending.set(id, { entry: cur, timer })
   }, [find, pending, dispatch])
 
@@ -120,7 +128,7 @@ export function useStore() {
   return v
 }
 
-/** Object URL for a stored blob, cached for the session. */
+/** Object URL for a stored blob, cached for the session. Falls back to the cloud copy. */
 const urlCache = new Map<string, Promise<string | null>>()
 export function useBlobUrl(id: string | undefined) {
   const [url, setUrl] = useState<string | null>(null)
@@ -129,8 +137,12 @@ export function useBlobUrl(id: string | undefined) {
     let live = true
     let p = urlCache.get(id)
     if (!p) {
-      p = db.getBlob(id).then((b) => (b ? URL.createObjectURL(b) : null))
+      p = db.getBlob(id)
+        .then(async (b) => b ?? (await fetchRemoteBlob(id)))
+        .then((b) => (b ? URL.createObjectURL(b) : null))
       urlCache.set(id, p)
+      // Don't cache a miss forever: the blob may arrive later.
+      p.then((u) => { if (!u) urlCache.delete(id) })
     }
     p.then((u) => { if (live) setUrl(u) })
     return () => { live = false }

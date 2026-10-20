@@ -5,6 +5,7 @@ import { PhotoPicker } from '../components/PhotoPicker'
 import { MediaThumb } from '../components/MediaThumb'
 import { Toast } from '../components/Toast'
 import { go } from '../App'
+import { isConfigured } from '../supabase'
 
 /** Showback after a recording, the Write screen, and Edit on an old memory are
  *  all this one screen. The entry is already saved; this just lets her change it. */
@@ -62,7 +63,7 @@ export function Editor({ id: existingId, fresh = false }: { id?: string; fresh?:
       <h1 className="h1">{entry ? fullDate(entry.at) : 'Right now'}</h1>
 
       {entry?.audio && !entry.text && entry.transcribing && (
-        <div className="row__sub" style={{ marginBottom: 10 }}>Your voice is kept. The words arrive in the next stage; you can type them for now.</div>
+        <div className="row__sub" style={{ marginBottom: 10 }}>{isConfigured ? 'Writing it down… You can type instead if you like.' : 'Your voice is kept. The words arrive once the backup is connected; you can type them for now.'}</div>
       )}
       <textarea
         ref={area}

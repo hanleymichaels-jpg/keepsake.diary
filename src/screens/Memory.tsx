@@ -26,7 +26,7 @@ export function Memory({ id }: { id: string }) {
       {entry.text ? (
         <p className="entry-text">{entry.text}</p>
       ) : entry.audio ? (
-        <p className="entry-text" style={{ color: 'var(--muted)', fontStyle: 'italic' }}>Waiting to be written down</p>
+        <p className="entry-text" style={{ color: 'var(--muted)', fontStyle: 'italic' }}>Writing it down…</p>
       ) : null}
 
       {entry.audio && <AudioPlayer blobId={entry.audio.id} seconds={entry.audio.seconds} />}

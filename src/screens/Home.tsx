@@ -6,11 +6,13 @@ import { dayLabel, dayKey, dateWords, duration } from '../format'
 import { EntryCard } from '../components/EntryCard'
 import { Toast } from '../components/Toast'
 import { go } from '../App'
+import { useSyncStatus } from '../sync'
 
 const MAX_SECONDS = 600
 
 export function Home() {
   const { ready, entries, add, restore } = useStore()
+  const sync = useSyncStatus()
   const [q, setQ] = useState(() => { const t = sessionStorage.getItem('q') ?? ''; sessionStorage.removeItem('q'); return t })
   const rec = useRef<Recording | null>(null)
   const [recording, setRecording] = useState(false)
@@ -100,6 +102,7 @@ export function Home() {
         </button>
       </div>
 
+      {sync.syncing && sync.pending > 0 && <div className="row__sub" style={{ marginBottom: 8 }}>Backing up…</div>}
       {ready && days.length === 0 && (
         <div className="empty">{q ? `Nothing about “${q}” yet.` : 'Your moments will gather here.'}</div>
       )}

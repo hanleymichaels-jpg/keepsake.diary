@@ -15,12 +15,23 @@ export type Entry = {
   at: number
   updatedAt: number
   text: string
+  /** The raw transcript, kept even if she edits the text. */
+  transcript?: string
   source: 'voice' | 'typed'
   audio?: { id: string; seconds: number; type: string }
-  /** True while the transcript has not arrived. Stage 2 sets it false. */
+  /** True while the transcript has not arrived. */
   transcribing?: boolean
   media: Media[]
   people: string[]
   places: string[]
   keywords: string[]
+  title?: string
+
+  // Local-only bookkeeping, never sent to the server.
+  /** Changed on this phone and not yet backed up. */
+  dirty?: boolean
+  /** Text edited locally; ask the server to re-derive people/places. */
+  needsExtract?: boolean
+  /** When we last asked the server to transcribe this entry. */
+  transcribeRequestedAt?: number
 }

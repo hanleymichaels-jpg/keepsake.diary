@@ -13,7 +13,7 @@ export function EntryCard({ entry }: { entry: Entry }) {
       {entry.text ? (
         <div className="card__text">{entry.text}</div>
       ) : entry.audio ? (
-        <div className="card__text card__text--pending">Waiting to be written down</div>
+        <div className="card__text card__text--pending">Writing it down…</div>
       ) : null}
       {entry.media.length > 0 && (
         <div className="thumbs">
