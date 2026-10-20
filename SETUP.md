@@ -12,8 +12,16 @@ signs in once on her phone with her email and a six-digit code.
    bucket, and the row-level rules that keep everything scoped to her account.
 3. **Authentication → Providers → Email**: leave Email enabled. Turn **off**
    "Confirm email" if you want the first sign-in to be a single step.
-4. **Authentication → Email Templates → Magic Link**: replace the body so it
-   sends a code instead of a link. The code is `{{ .Token }}`. A minimal body:
+4. **Authentication → Emails → SMTP Settings**: Supabase locks the email
+   templates (and caps sends at two an hour) until the project has its own
+   outgoing mail account. Keepsake uses his Gmail: host `smtp.gmail.com`,
+   port 465, username and sender both `hanley.michaels@gmail.com`, sender
+   name `Keepsake`, password a Google app password (needs 2-Step
+   Verification on the Google account; make one at
+   myaccount.google.com/apppasswords). Set up on 20 October 2026.
+   **Authentication → Emails → Templates → Magic link or OTP**: subject
+   `Your Keepsake code`, and a body that sends the code instead of a link.
+   The code is `{{ .Token }}`. The body in use:
 
    ```html
    <h2>Your Keepsake code</h2>
