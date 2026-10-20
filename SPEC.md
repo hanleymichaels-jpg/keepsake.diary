@@ -1,6 +1,6 @@
 # Keepsake — a diary you talk to
 
-Status: **approved by her**, 20 October 2026. Name: Keepsake. Icon: Ember. Address: keepsake.diary. Stage 1 built; stage 2 in progress.
+Status: **approved by her**, 20 October 2026. Name: Keepsake. Icon: Ember. Address: keepsakediary.net. Stages 1 and 2 built and live.
 
 ---
 
@@ -89,7 +89,7 @@ is pleased to have it on her home screen. Direction:
 - Three candidates were drawn (Ember, Linen, Fern). **Ember** was chosen on
   20 October 2026: plum cover, coral ribbon, a sound-wave mark on the front.
 
-**Address.** `keepsake.diary`, which you will buy. Netlify hosts it with the custom domain
+**Address.** `keepsakediary.net`, bought 20 October 2026 (`keepsake.diary` was the first choice; the `.net` name was taken instead). Netlify hosts it with the custom domain
 and its own certificate, so the address she sees is just the name. Nothing
 ships to her phone on a `netlify.app` address: the installed app is pinned
 to whatever address it was installed from, and moving it later means
@@ -300,7 +300,7 @@ Visual rules:
 Same stack as Atlas so the tooling is already on the machine.
 
 **App:** Vite, React 19, TypeScript, vite-plugin-pwa. Installed to the home
-screen as a standalone web app. Hosted on Netlify at the `.diary` custom
+screen as a standalone web app. Hosted on Netlify at the `keepsakediary.net` custom
 domain (see section 4).
 
 **On the phone:**
@@ -354,7 +354,7 @@ her account. The export is hers to keep anywhere.
 
 ## 10. Setup, done once by you
 
-1. Open the `.diary` address in Safari on her phone, *Add to Home Screen*.
+1. Open `https://keepsakediary.net` in Safari on her phone, *Add to Home Screen*.
 2. Open the installed app, sign in with her email and the code.
 3. Tap *Remember* once so iOS asks for the microphone, and allow it.
 4. In Settings, turn on the nudge (iOS asks for notification permission),
