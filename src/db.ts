@@ -15,7 +15,7 @@ let dbp: Promise<IDBPDatabase<KeepsakeDB>> | null = null
 
 function db() {
   dbp ??= openDB<KeepsakeDB>('keepsake', 2, {
-    upgrade(d, oldVersion) {
+    upgrade(d, oldVersion, _newVersion, tx) {
       if (oldVersion < 1) {
         d.createObjectStore('entries', { keyPath: 'id' }).createIndex('at', 'at')
         d.createObjectStore('blobs', { keyPath: 'id' })
@@ -24,6 +24,11 @@ function db() {
         d.createObjectStore('uploaded', { keyPath: 'id' })
         d.createObjectStore('tombstones', { keyPath: 'id' })
         d.createObjectStore('meta', { keyPath: 'key' })
+        // Moments saved before backup existed still need to go up.
+        if (oldVersion >= 1) {
+          const store = tx.objectStore('entries')
+          void store.getAll().then((all) => { for (const e of all) void store.put({ ...e, dirty: true }) })
+        }
       }
     },
   })

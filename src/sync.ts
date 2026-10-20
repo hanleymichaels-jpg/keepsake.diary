@@ -159,7 +159,13 @@ async function push(userId: string, token: string) {
       if (stale) {
         const now = await db.getEntry(e.id)
         if (now) await db.putEntry({ ...now, transcribeRequestedAt: Date.now() })
-        void callFunction('/api/transcribe', { id: e.id }, token).then(() => pollSoon())
+        void callFunction('/api/transcribe', { id: e.id }, token).then(async (status) => {
+          if (status === 404) {
+            // The server has no row for this moment yet; send it again next time.
+            const n = await db.getEntry(e.id)
+            if (n) { await db.putEntry({ ...n, dirty: true, transcribeRequestedAt: undefined }); scheduleSync() }
+          } else pollSoon()
+        })
       }
     } else if (e.needsExtract && e.text.trim()) {
       const now = await db.getEntry(e.id)
@@ -169,12 +175,14 @@ async function push(userId: string, token: string) {
   }
 }
 
-async function callFunction(path: string, body: unknown, token: string) {
+async function callFunction(path: string, body: unknown, token: string): Promise<number> {
   try {
     const res = await fetch(path, { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` }, body: JSON.stringify(body) })
     if (!res.ok) setStatus({ error: `${path} ${res.status}` })
+    return res.status
   } catch (e) {
     setStatus({ error: e instanceof Error ? e.message : String(e) })
+    return 0
   }
 }
 
