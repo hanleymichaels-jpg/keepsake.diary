@@ -79,9 +79,9 @@ Without a `.env` the app runs phone-only, exactly as stage 1 did.
 
 The site is `keepsake-diary-1v90` on the Hanley Development Co. team
 (https://app.netlify.com/projects/keepsake-diary-1v90), created on
-20 October 2026 with all six variables set. Until a GitHub remote exists it
-is deployed by direct upload from this folder; once the repository is on
-GitHub, connect it so pushes to `main` deploy. Build command `pnpm build`,
+20 October 2026 with all six variables set, and linked to the GitHub
+repository `hanleymichaels-jpg/keepsake.diary`, so every push to `main`
+deploys. Build command `pnpm build`,
 publish directory `dist` (already in `netlify.toml`). Functions deploy from
 `netlify/functions` automatically. Add the custom domain `keepsake.diary` under **Domain
 management** once you own it, and install the app on her phone from that
