@@ -14,7 +14,7 @@ export default defineConfig({
         short_name: 'Keepsake',
         description: 'A diary you talk to.',
         theme_color: '#2E1F3F',
-        background_color: '#FBF7F1',
+        background_color: '#F7F2FB',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',

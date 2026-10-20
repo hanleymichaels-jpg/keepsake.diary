@@ -286,7 +286,7 @@ Visual rules:
 
 - Body text 20px minimum. Entry text 22px. One typeface, generous line
   height.
-- Follows the phone's light or dark setting. One warm accent colour.
+- Follows the phone's light or dark setting. One accent colour, coral, on lavender-white paper with plum ink (deep plum in dark mode), the same family as the Ember icon. Changed from cream and terracotta on 20 October 2026 at his request.
 - Every tappable thing is at least 56px tall. The *Remember* button is at
   least 120px.
 - Primary actions sit in the bottom third of the screen for one-handed
