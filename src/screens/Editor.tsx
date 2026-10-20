@@ -32,13 +32,6 @@ export function Editor({ id: existingId, fresh = false }: { id?: string; fresh?:
     await store.update(id, { text })
   }
 
-  useEffect(() => {
-    const el = area.current
-    if (!el) return
-    el.style.height = 'auto'
-    el.style.height = `${Math.max(180, el.scrollHeight)}px`
-  }, [entry?.text])
-
   function done() {
     if (entry && !entry.text.trim() && entry.media.length === 0 && !entry.audio) store.remove(id)
     go('')
@@ -73,7 +66,7 @@ export function Editor({ id: existingId, fresh = false }: { id?: string; fresh?:
         onChange={(e) => void setText(e.target.value)}
       />
 
-      <div className="stack" style={{ marginTop: 14 }}>
+      <div className="stack" style={{ marginTop: 14, flex: 'none' }}>
         <PhotoPicker
           onPick={async (items) => { await ensure(); await store.addMedia(id, items) }}
           onDeclined={(text) => setToast({ text })}

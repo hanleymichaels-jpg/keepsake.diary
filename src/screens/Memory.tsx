@@ -18,9 +18,11 @@ export function Memory({ id }: { id: string }) {
   )
 
   return (
-    <div className="screen screen--sticky-footer">
+    <div className="screen screen--pad">
       <div className="topbar">
         <button className="btn btn--quiet" onClick={() => history.back()}>‹ Back</button>
+        <div className="grow" />
+        <button className="btn" onClick={() => go(`edit/${entry.id}`)}>Edit</button>
       </div>
       <h1 className="h1">{fullDate(entry.at)}</h1>
       {entry.text ? (
@@ -47,10 +49,6 @@ export function Memory({ id }: { id: string }) {
           {entry.places.map((n) => <button className="chip" key={n} onClick={() => searchFor(n)}><span>at</span> {n}</button>)}
         </div>
       )}
-
-      <div className="footer">
-        <button className="btn btn--block" onClick={() => go(`edit/${entry.id}`)}>Edit</button>
-      </div>
 
       {viewing && <Viewer media={viewing} onClose={() => setViewing(null)} />}
     </div>

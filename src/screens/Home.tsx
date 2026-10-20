@@ -104,7 +104,16 @@ export function Home() {
 
       {sync.syncing && sync.pending > 0 && <div className="row__sub" style={{ marginBottom: 8 }}>Backing up…</div>}
       {ready && days.length === 0 && (
-        <div className="empty">{q ? `Nothing about “${q}” yet.` : 'Your moments will gather here.'}</div>
+        <div className="empty">
+          {q ? (
+            <div className="empty__title">Nothing about “{q}” yet.</div>
+          ) : (
+            <>
+              <div className="empty__title">Nothing kept yet.</div>
+              <div className="empty__body">Press Remember and say what happened, or tap Write.</div>
+            </>
+          )}
+        </div>
       )}
       {days.map(([key, list]) => (
         <section key={key}>
